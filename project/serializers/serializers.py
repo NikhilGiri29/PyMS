@@ -1,7 +1,7 @@
 from marshmallow import fields
 from marshmallow_sqlalchemy import SQLAlchemySchema
 
-from project.models.models import Film, Actor
+from project.models.models import Film, Actor, User
 
 
 class ActorSchema(SQLAlchemySchema):
@@ -17,3 +17,8 @@ class FilmSchema(SQLAlchemySchema):
     class Meta:
         model = Film
         fields = ('id', 'name', 'pub_date', 'cast')
+
+class UserSchema(SQLAlchemySchema):
+    class Meta:
+        model = User
+        fields = ('id', 'name', 'address', 'contact','email','password','user_type','registered_on','admin')

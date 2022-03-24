@@ -3,7 +3,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Date, ForeignKey, Enum
+import enum
 
 from project.models.init_db import db
 
@@ -43,3 +44,26 @@ class FilmCast(db.Model):
     )
     actor = db.relationship(Actor)
     film = db.relationship(Film)
+
+###################################################################
+
+class typeOfUser(enum.Enum):
+    customer = "customer"
+    restaurant = "restaurant"
+    delivery = "delivery"
+
+class User(db.Model):
+    """ User Model for storing user related details """
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    contact = db.Column(db.Integer, unique = True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    user_type = db.column(db.Enum(typeOfUser),nullable = False)
+    registered_on = db.Column(db.DateTime, default=datetime.datetime.now,nullable=False)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
+
+    
