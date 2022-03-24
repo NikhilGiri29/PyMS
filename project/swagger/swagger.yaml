@@ -24,6 +24,54 @@ tags:
 schemes:
 - "http"
 paths:
+  /register:
+    post:
+      tags:
+      - "Sign Up"
+      summary: "Example endpoint return create a user"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "Data of the User"
+        required: true
+        schema:
+          $ref: "#/definitions/Register"
+      responses:
+        "200":
+          description: "The user created"
+          schema:
+            $ref: '#/definitions/Register'
+        "405":
+          description: "Invalid input"
+  /login:
+    post:
+      tags:
+      - "Sign In"
+      summary: "Example endpoint return login a user"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "Login Data of the User"
+        required: true
+        schema:
+          $ref: "#/definitions/Login"
+      responses:
+        "200":
+          description: "The user logged in"
+          schema:
+            $ref: '#/definitions/Login'
+        "405":
+          description: "Invalid input"
   /actors:
     post:
       tags:
@@ -203,6 +251,41 @@ definitions:
         type: "array"
         items:
           $ref: '#/definitions/Film'
+
+      Register:
+        type: "object"
+        properties:
+          id:
+            type: "integer"
+          name:
+            type: "string"
+          address:
+            type: "string"
+          contact:
+            type: "integer"
+          email:
+            type: "string"
+          password:
+            type: "string"
+          user_type:
+            type: "string"
+            enum: [customer, restaurant, delivery]
+          admin:
+            type: "boolean"
+            
+      Login:
+        type: "object"
+        properties:
+          id:
+            type: "integer"
+          email:
+            type: "string"
+          password:
+            type: "string"
+          
+        
+
+      
 externalDocs:
   description: "Find out more about Swagger"
   url: "https://github.com/python-microservices/microservices-scaffold"

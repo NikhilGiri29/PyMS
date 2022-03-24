@@ -16,34 +16,28 @@ def post() -> dict:
         data = connexion.request.get_json()
         user = User.query.filter_by(email=data['email']).first()
         if not user:
-            try:
-                user = User(
-                    name=data["name"],
-                    address=data["address"],
-                    contact=data['contact'],
-                    email = data["email"],
-                    password=data['password'],
-                    user_type = data["user_type"],
-                    registered_on=datetime.strptime(data["registered_on"], "%Y-%m-%d").date,
-                    admin = data['admin']
-                )
-                
-                db.session.add(user)
-                db.session.commit()
-
-                auth_token = user.encode_auth_token(user.id)
-                responseObject = {
-                    'status': 'success',
-                    'message': 'Successfully registered.',
-                    'auth_token': auth_token.decode()
-                }
-                return (jsonify(responseObject)), 201
-            except Exception as e:
-                responseObject = {
-                    'status': 'fail',
-                    'message': 'Some error occurred. Please try again.'
-                }
-                return (jsonify(responseObject)), 401
+            
+            user = User(
+                name=data["name"],
+                address=data["address"],
+                contact=data['contact'],
+                email = data["email"],
+                password=data['password'],
+                user_type = data['user_type'],
+                admin = data['admin']
+            )
+            
+            db.session.add(user)
+            db.session.commit()
+            print("User added to db")
+            auth_token = user.encode_auth_token(user.email)
+            responseObject = {
+                'status': 'success',
+                'message': 'Successfully registered.',
+                'auth_token': auth_token.decode()
+            }
+            return (jsonify(responseObject)), 201
+            
         else:
             responseObject = {
                 'status': 'fail',
