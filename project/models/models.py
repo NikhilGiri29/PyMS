@@ -62,7 +62,7 @@ class User(db.Model):
     contact = db.Column(db.Integer, unique = True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    user_type = db.column(db.Enum(typeOfUser),nullable = False)
+    user_type = db.column(db.Enum(typeOfUser))
     registered_on = db.Column(db.DateTime, default=datetime.datetime.now,nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
 

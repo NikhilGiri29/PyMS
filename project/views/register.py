@@ -11,20 +11,6 @@ from project.models.models import User
 from project.serializers.serializers import UserSchema
 
 
-def get() -> Tuple[dict, int]:
-    query = User.query.paginate(
-        connexion.request.args.get("paginationKey", 1),
-        connexion.request.args.get("pageSize", 5)
-    )
-    schema = UserSchema()
-    result = schema.dump(query.items, many=True)
-    return jsonify(result), 200
-
-
-def search() -> Tuple[dict, int]:
-    return get()
-
-
 def post() -> dict:
     if connexion.request.is_json:
         data = connexion.request.get_json()
@@ -41,11 +27,10 @@ def post() -> dict:
                     registered_on=datetime.strptime(data["registered_on"], "%Y-%m-%d").date,
                     admin = data['admin']
                 )
-
-                # insert the user
+                
                 db.session.add(user)
                 db.session.commit()
-                # generate the auth token
+
                 auth_token = user.encode_auth_token(user.id)
                 responseObject = {
                     'status': 'success',
