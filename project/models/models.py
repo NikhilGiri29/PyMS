@@ -2,7 +2,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import datetime
-
+import jwt
 from sqlalchemy import Column, Integer, String, DateTime, Date, ForeignKey, Enum
 import enum
 
@@ -66,4 +66,42 @@ class User(db.Model):
     registered_on = db.Column(db.DateTime, default=datetime.datetime.now,nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
 
+    def __init__(self,name,address,contact,email,password,user_type,admin) :
+        self.name = name 
+        self.address = address 
+        self.contact =  contact 
+        self.email =  email 
+        self.password = password 
+        self.user_type = user_type 
+        self.registered_on = datetime.datetime.now()
+        self.admin = admin
+
+    def encode_auth_token(self,email):
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'iat': datetime.datetime.utcnow(),
+                'sub': email
+            }
+            return jwt.encode(
+                payload,
+                'test',
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
     
+    @staticmethod
+    def decode_auth_token(auth_token):
+        """
+        Decodes the auth token
+        :param auth_token:
+        :return: integer|string
+        """
+        try:
+            payload = jwt.decode(auth_token, 'test')
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
